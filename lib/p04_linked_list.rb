@@ -1,4 +1,4 @@
-# require 'Enumerable'
+require 'byebug'
 
 class Link
   attr_accessor :key, :val, :next, :prev
@@ -25,7 +25,7 @@ class LinkedList
   end
 
   def [](i)
-    each_with_index { |link, j| return link if i == j }
+    self.each { |link| return link if link.key == i }
     nil
   end
 
@@ -60,17 +60,14 @@ class LinkedList
   end
 
   def insert(key, val)
-    if self.include?(key)
-      self[key].key = key
-      self[key].value = val
-    else
-      old_prev = @tail.prev
-      new_link = Link.new(key, val)
-      @tail.prev = new_link
-      new_link.next = @tail
-      new_link.prev = old_prev
-      old_prev.next = new_link
-    end
+    self.each { |link| return link.val = val if link.key == key }
+
+    old_prev = @tail.prev
+    new_link = Link.new(key, val)
+    @tail.prev = new_link
+    new_link.next = @tail
+    new_link.prev = old_prev
+    old_prev.next = new_link
   end
 
   def remove(key)
@@ -92,7 +89,6 @@ class LinkedList
     end
   end
 
-  # uncomment when you have `each` working and `Enumerable` included
   def to_s
     inject([]) { |acc, link| acc << "[#{link.key}, #{link.val}]" }.join(", ")
   end
